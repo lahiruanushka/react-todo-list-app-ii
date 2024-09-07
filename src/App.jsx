@@ -1,51 +1,44 @@
-import { useEffect, useState } from "react";
-import "./App.css";
-import { TextField, CircularProgress, Box, Typography } from "@mui/material";
-import { Header, Footer, TodoList, TodoInput, TodoFilters } from "./components";
+import React, { useState } from "react";
+import {
+  ThemeProvider as MuiThemeProvider,
+  CssBaseline,
+  Paper,
+  Container,
+  Box,
+} from "@mui/material";
+import { lightTheme, darkTheme } from "./theme"; // Import themes
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import TodoList from "./components/TodoList";
+import TodoInput from "./components/TodoInput";
 
 function App() {
-  const [todoList, setTodoList] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState(null);
+  const [darkMode, setDarkMode] = useState(false);
 
-  async function fetchListOfTodos() {
-    try {
-      setLoading(true);
-      const apiResponse = await fetch("https://dummyjson.com/todos");
-      const result = await apiResponse.json();
-
-      if (result?.todos && result?.todos?.length > 0) {
-        setTodoList(result.todos);
-      } else {
-        setTodoList([]);
-      }
-
-      setErrorMsg("");
-    } catch (error) {
-      setErrorMsg("Failed to fetch todos. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    fetchListOfTodos();
-  }, []);
+  const toggleTheme = () => {
+    setDarkMode(!darkMode);
+  };
 
   return (
-    <Box sx={{ width: "100%", maxWidth: 500, mx: "auto", p: 2 }}>
-      <Header />
-      <TodoInput />
-      <TodoFilters />
-      {loading ? (
-        <CircularProgress />
-      ) : errorMsg ? (
-        <Typography color="error">{errorMsg}</Typography>
-      ) : (
-        <TodoList todoList={todoList} />
-      )}
-      <Footer />
-    </Box>
+    <MuiThemeProvider theme={darkMode ? darkTheme : lightTheme}>
+      <CssBaseline />
+      <Paper sx={{ minHeight: "100vh", bgcolor: "background.default" }}>
+        <Header darkMode={darkMode} toggleTheme={toggleTheme} />
+        <Container>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <TodoInput />
+            <TodoList />
+          </Box>
+        </Container>
+        <Footer />
+      </Paper>
+    </MuiThemeProvider>
   );
 }
 

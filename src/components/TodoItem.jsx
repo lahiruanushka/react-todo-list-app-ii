@@ -1,9 +1,12 @@
-import React from 'react'
+import React from 'react';
+import { ListItem, ListItemText } from '@mui/material';
 
-const TodoItem = ({todo}) => {
+const TodoItem = ({ todo }) => {
   return (
-    <div>{todo}</div>
-  )
-}
+    <ListItem sx={{ borderBottom: '1px solid', borderColor: 'divider' }}>
+      <ListItemText primary={todo} />
+    </ListItem>
+  );
+};
 
-export default TodoItem
+export default TodoItem;
